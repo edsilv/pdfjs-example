@@ -1,0 +1,26 @@
+{
+  "name": "pdfjs-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "copy": "cp -R node_modules/pdfjs-dist/build/pdf.combined.js pdf.combined.js",
+    "start": "http-server -c-1 -p 8888"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edsilv/pdfjs-example.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/edsilv/pdfjs-example/issues"
+  },
+  "homepage": "https://github.com/edsilv/pdfjs-example#readme",
+  "dependencies": {
+    "pdfjs-dist": "^2.0.161"
+  },
+  "devDependencies": {
+    "http-server": "^0.10.0"
+  }
+}
