@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "copy": "cp -R node_modules/pdfjs-dist/build/pdf.combined.js pdf.combined.js",
+    "copy": "cp node_modules/pdfjs-dist/build/pdf.combined.js pdf.combined.js && cp node_modules/pdfjs-dist/build/pdf.worker.js pdf.worker.js",
     "start": "http-server -c-1 -p 8888"
   },
   "repository": {

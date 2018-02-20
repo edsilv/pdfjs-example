@@ -3,7 +3,7 @@
 var url = '//cdn.mozilla.net/pdfjs/tracemonkey.pdf';
 
 // The workerSrc property shall be specified.
-PDFJS.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
+//PDFJS.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
 
 var pdfDoc = null,
     pageNum = 1,
@@ -82,14 +82,3 @@ function onNextPage() {
   queueRenderPage(pageNum);
 }
 document.getElementById('next').addEventListener('click', onNextPage);
-
-/**
- * Asynchronously downloads PDF.
- */
-PDFJS.getDocument(url).then(function(pdfDoc_) {
-  pdfDoc = pdfDoc_;
-  document.getElementById('page_count').textContent = pdfDoc.numPages;
-
-  // Initial/first page rendering
-  renderPage(pageNum);
-});

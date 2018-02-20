@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>PDF.js Test Harness</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.js"></script>
 </head>
 <body>
 
@@ -17,7 +18,30 @@
     
     <canvas id="the-canvas"></canvas>
 
-    <script src="pdf.combined.js"></script>
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function(event) {
+            requirejs.config({paths: {'pdfjs-dist/build/pdf.combined': 'pdf.combined'}});
+            requirejs(['pdfjs-dist/build/pdf.combined'], function(pdf) {
+
+                console.log('PDFJS Module: ' + pdf + '<br>');
+                console.log('PDFJS Global: ' + window.PDFJS);
+
+                PDFJS.getDocument(url).then(function(pdfDoc_) {
+                    pdfDoc = pdfDoc_;
+                    document.getElementById('page_count').textContent = pdfDoc.numPages;
+
+                    // Initial/first page rendering
+                    renderPage(pageNum);
+                });
+            });
+        });
+
+        
+    </script>
+
+    <!-- <script src="pdf.combined.js"></script> -->
+    <!-- <script src="pdf.worker.js"></script> -->
     <script src="example.js"></script>
 </body>
 </html>
