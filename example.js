@@ -5,46 +5,47 @@ var url = 'https://dlcs.io/file/wellcome/1/caf18956-8f79-4fe6-8988-af329b036416'
 // The workerSrc property shall be specified.
 //PDFJS.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
 
-var pdfDoc = null,
-    pageNum = 1,
-    pageRendering = false,
-    pageNumPending = null,
-    scale = 0.8,
-    canvas = document.getElementById('the-canvas'),
-    ctx = canvas.getContext('2d');
+var _pdfDoc = null;
+var _pageNum = 1;
+var _pageRendering = false;
+var _pageNumPending = null;
+var _defaultScale = 0.8;
+var _scale = _defaultScale;
+var _canvas = document.getElementById('the-canvas');
+var _ctx = _canvas.getContext('2d');
 
 /**
  * Get page info from document, resize canvas accordingly, and render page.
  * @param num Page number.
  */
-function renderPage(num) {
-  pageRendering = true;
+function renderPage(num, scale) {
+  _pageRendering = true;
   // Using promise to fetch the page
-  pdfDoc.getPage(num).then(function(page) {
+  _pdfDoc.getPage(num).then(function(page) {
     var viewport = page.getViewport(scale);
-    canvas.height = viewport.height;
-    canvas.width = viewport.width;
+    _canvas.height = viewport.height;
+    _canvas.width = viewport.width;
 
     // Render PDF page into canvas context
     var renderContext = {
-      canvasContext: ctx,
+      canvasContext: _ctx,
       viewport: viewport
     };
     var renderTask = page.render(renderContext);
 
     // Wait for rendering to finish
     renderTask.promise.then(function() {
-      pageRendering = false;
-      if (pageNumPending !== null) {
+      _pageRendering = false;
+      if (_pageNumPending !== null) {
         // New page rendering is pending
-        renderPage(pageNumPending);
-        pageNumPending = null;
+        renderPage(_pageNumPending);
+        _pageNumPending = null;
       }
     });
   });
 
   // Update page counters
-  document.getElementById('page_num').textContent = pageNum;
+  document.getElementById('page_num').textContent = _pageNum;
 }
 
 /**
@@ -52,10 +53,10 @@ function renderPage(num) {
  * finised. Otherwise, executes rendering immediately.
  */
 function queueRenderPage(num) {
-  if (pageRendering) {
-    pageNumPending = num;
+  if (_pageRendering) {
+    _pageNumPending = num;
   } else {
-    renderPage(num);
+    renderPage(num, _scale);
   }
 }
 
@@ -63,22 +64,46 @@ function queueRenderPage(num) {
  * Displays previous page.
  */
 function onPrevPage() {
-  if (pageNum <= 1) {
+  if (_pageNum <= 1) {
     return;
   }
-  pageNum--;
-  queueRenderPage(pageNum);
+  _pageNum--;
+  queueRenderPage(_pageNum);
 }
+
 document.getElementById('prev').addEventListener('click', onPrevPage);
 
 /**
  * Displays next page.
  */
 function onNextPage() {
-  if (pageNum >= pdfDoc.numPages) {
+  if (_pageNum >= _pdfDoc.numPages) {
     return;
   }
-  pageNum++;
-  queueRenderPage(pageNum);
+  _pageNum++;
+  queueRenderPage(_pageNum);
 }
+
 document.getElementById('next').addEventListener('click', onNextPage);
+
+/**
+ * Zooms in
+ */
+function onZoomIn() {
+  _scale += 0.5;
+  queueRenderPage(_pageNum);
+}
+
+document.getElementById('zoomin').addEventListener('click', onZoomIn);
+
+/**
+ * Zooms out
+ */
+function onZoomOut() {
+  if (_scale > _defaultScale) {
+    _scale -= 0.5;
+    queueRenderPage(_pageNum);
+  }
+}
+
+document.getElementById('zoomout').addEventListener('click', onZoomOut);

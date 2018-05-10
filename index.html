@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>PDF.js Test Harness</title>
+    <style>
+        #scroll {
+            overflow: scroll;
+            width: 800px;
+            height: 800px;
+        }
+    </style>
 </head>
 <body>
 
@@ -13,20 +20,25 @@
         <button id="next">Next</button>
         &nbsp; &nbsp;
         <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+        &nbsp; &nbsp;
+        <button id="zoomin">Zoom In</button>
+        <button id="zoomout">Zoom Out</button>
     </div>
     
-    <canvas id="the-canvas"></canvas>
+    <div id="scroll">
+        <canvas id="the-canvas"></canvas>
+    </div>
 
     <script>
 
         document.addEventListener("DOMContentLoaded", function(event) {
 
-            PDFJS.getDocument(url).then(function(pdfDoc_) {
-                pdfDoc = pdfDoc_;
-                document.getElementById('page_count').textContent = pdfDoc.numPages;
+            PDFJS.getDocument(url).then(function(pdfDoc) {
+                _pdfDoc = pdfDoc;
+                document.getElementById('page_count').textContent = _pdfDoc.numPages;
 
                 // Initial/first page rendering
-                renderPage(pageNum);
+                renderPage(_pageNum, _scale);
             });
 
         });
