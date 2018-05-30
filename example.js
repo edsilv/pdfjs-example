@@ -1,6 +1,7 @@
 // If absolute URL from the remote server is provided, configure the CORS
 // header on that server.
-var url = 'https://dlcs.io/file/wellcome/1/caf18956-8f79-4fe6-8988-af329b036416';
+//var url = 'https://dlcs.io/file/wellcome/1/caf18956-8f79-4fe6-8988-af329b036416';
+var url = 'example.pdf';
 
 // The workerSrc property shall be specified.
 //PDFJS.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
@@ -107,3 +108,14 @@ function onZoomOut() {
 }
 
 document.getElementById('zoomout').addEventListener('click', onZoomOut);
+
+
+function rotate(delta) {
+  if (!this.pdfDocument) {
+    return;
+  }
+  let newRotation = (this.pdfViewer.pagesRotation + 360 + delta) % 360;
+  this.pdfViewer.pagesRotation = newRotation;
+  // Note that the thumbnail viewer is updated, and rendering is triggered,
+  // in the 'rotationchanging' event handler.
+}
